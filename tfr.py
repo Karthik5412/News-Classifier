@@ -6,7 +6,7 @@ class processing_text(BaseEstimator,TransformerMixin) :
     def fit(self, x, y=None ) :
         return self 
     
-    def transform(self,x) :
+    def healper(self,x) :
         cleanded = []
         for w in x :
             w = re.sub(r'[^a-zA-z\s]','',w.lower())
@@ -16,6 +16,13 @@ class processing_text(BaseEstimator,TransformerMixin) :
             cleanded.append(w)
             
         return cleanded
+    
+    def transform(self, x) :
+        x_copy = x.copy()
+        for col in x_copy.columns:
+            x_copy[col] = self.healper(x_copy[col])
+            
+        return x_copy
     
 class processing_date(BaseEstimator,TransformerMixin) :
     def fit(self, x, y=None ) :
