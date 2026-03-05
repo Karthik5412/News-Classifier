@@ -5,10 +5,10 @@ import string, pandas as pd, numpy as np
 class processing_text(BaseEstimator,TransformerMixin) :
     def fit(self, x, y=None ) :
         return self 
-    
-    def healper(self,x) :
+        
+    def transform(self, x) :
         cleanded = []
-        for w in x :
+        for w in x:
             w = re.sub(r'[^a-zA-z\s]','',w.lower())
             
             w.strip()
@@ -16,13 +16,6 @@ class processing_text(BaseEstimator,TransformerMixin) :
             cleanded.append(w)
             
         return cleanded
-    
-    def transform(self, x) :
-        x_copy = x.copy()
-        for col in x_copy.columns:
-            x_copy[col] = self.healper(x_copy[col])
-            
-        return x_copy
     
 class processing_date(BaseEstimator,TransformerMixin) :
     def fit(self, x, y=None ) :
