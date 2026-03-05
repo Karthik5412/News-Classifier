@@ -7,8 +7,11 @@ class processing_text(BaseEstimator,TransformerMixin) :
         return self 
         
     def transform(self, x) :
+        
+        x['concat'] = str(x['headline']) +' ' + str(x['short_description'])
+        
         cleanded = []
-        for w in x:
+        for w in x['concat']:
             w = re.sub(r'[^a-zA-z\s]','',w.lower())
             
             w.strip()
