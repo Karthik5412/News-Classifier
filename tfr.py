@@ -1,43 +1,18 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 import re
-import string, pandas as pd, numpy as np
+import string
 
-class processing_text(BaseEstimator,TransformerMixin) :
+class processing(BaseEstimator,TransformerMixin) :
     def fit(self, x, y=None ) :
-        return self 
-        
-    def transform(self, x) :
-        
-        x['concat'] = str(x['headline']) +' ' + str(x['short_description'])
-        
-        cleanded = []
-        for w in x['concat']:
-            w = re.sub(r'[^a-zA-z\s]','',w.lower())
-            
-            w.strip()
-            
-            cleanded.append(w)
-            
-        return cleanded
-    
-class processing_date(BaseEstimator,TransformerMixin) :
-    def fit(self, x, y=None ) :
-        return self 
-    
-    def transform(self, x) :
-        x['weekday'] = x['date'].dt.weekday
-        x['day'] = x['date'].dt.day
-        x['month'] = x['date'].dt.month
-        x['year'] = x['date'].dt.year
-        
-        x['day_sine'] = np.sin(2 * np.pi * x['day']- 1/ 31 )
-        x['day_cos'] = np.cos(2 * np.pi * x['day']- 1/ 31 )
-        
-        x['month_sine'] = np.sin(2 * np.pi * x['month']- 1/ 12 )
-        x['month_cos'] = np.cos(2 * np.pi * x['month']- 1/ 12 )
-        
-        x['weekday_sine'] = np.sin(2 * np.pi * x['weekday']- 1/ 7 )
-        x['weekday_cos'] = np.cos(2 * np.pi * x['weekday']- 1/ 7 )
-        
-        return x.drop(columns = ['date', 'day', 'month', 'weekday'])
+        return self
 
+    def healper(self, x):
+        x = re.sub(r'[^a-zA-z\s]','',x.lower())
+        return ' '.join(x.split())
+
+    def transform(self, x) :
+        combined = (x['headlines'].astype(str) + ' ' +
+                    x['description'].astype(str) + ' ' +
+                    x['content'].astype(str))
+
+        return combined.apply(self.healper).tolist()
